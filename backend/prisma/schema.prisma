@@ -1,0 +1,50 @@
+generator client {
+    provider = "prisma-client"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model User {
+    id           String   @id @default(uuid())
+    email        String   @unique
+    createdAt    DateTime @default(now()) @db.Timestamptz(6)
+    passwordHash String
+
+    stocks       Stock[]       @relation("UserStock")
+    userSettings UserSettings? @relation("UserSetting")
+
+    @@map("user")
+}
+
+model Stock {
+    id     String @id @default(uuid())
+    userId String
+    user   User   @relation("UserStock", fields: [userId], references: [id], onDelete: Cascade)
+
+    ticker        String
+    quanity       Int
+    purchasePrice Int
+    createdAt     DateTime @default(now()) @db.Timestamptz(6)
+}
+
+enum Theme {
+    DARK
+    LIGHT
+}
+
+enum Language {
+    ENG
+    UA
+}
+
+model UserSettings {
+    id     String @id @default(uuid())
+    userId String @unique
+    user   User   @relation("UserSetting", fields: [userId], references: [id], onDelete: Cascade)
+
+    theme    Theme
+    language Language
+}

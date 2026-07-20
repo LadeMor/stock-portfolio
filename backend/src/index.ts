@@ -1,5 +1,10 @@
 import cors from "cors";
 import express from "express";
+import { prisma } from "./prisma/client.js";
+
+import authRoutes from "./routes/auth.route.js";
+
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 
@@ -10,6 +15,8 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-app.listen(3000, () => {
-  console.log("API is running on port 3000");
+app.use("/api/auth", authRoutes);
+
+app.listen(PORT, () => {
+  console.log(`API is running on port ${PORT}`);
 });
