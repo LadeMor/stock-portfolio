@@ -8,6 +8,7 @@ import { generateToken } from "../utils/jwt.js";
 export const normalizeEmail = (email: string) => email.trim().toLowerCase();
 
 export const getMe = async (req: AuthenticatedRequest, res: Response) => {
+
     if (!req.user) return res.status(401).json({ error: "Unauthorized" });
 
     const user = await prisma.user.findUnique({
@@ -94,6 +95,7 @@ export const login = async (req: Request, res: Response): Promise<Response> => {
         return res.json({ token });
 
     } catch (err) {
+        console.log(err);
         return res.status(500).json({ error: "Login error: " + err });
     }
 
