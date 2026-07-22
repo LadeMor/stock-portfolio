@@ -58,7 +58,9 @@ export const register = async (req: Request, res: Response): Promise<Response> =
             }
         });
 
-        return res.status(201).json({ id: newUser.id })
+        const token = generateToken(newUser.id);
+
+        return res.status(201).json({ id: newUser.id, token })
 
     } catch (err) {
         return res.status(500).json({ error: "Registartions error: " + err });

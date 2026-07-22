@@ -3,6 +3,7 @@ import { createContext } from "react";
 
 type AuthContextValue = {
     user: GetMeResponse | null
+    token: string | null
     isAuthenticated: boolean
     isLoading: boolean
     // logout: () => void

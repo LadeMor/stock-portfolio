@@ -25,7 +25,7 @@ model Stock {
     user   User   @relation("UserStock", fields: [userId], references: [id], onDelete: Cascade)
 
     ticker        String
-    quanity       Int
+    quantity       Int
     purchasePrice Int
     createdAt     DateTime @default(now()) @db.Timestamptz(6)
 }

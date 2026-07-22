@@ -4,6 +4,7 @@ import { prisma } from "./prisma/client.js";
 import 'dotenv/config'
 
 import authRoutes from "./routes/auth.route.js";
+import stockRoutes from "./routes/stock.route.js";
 
 const PORT = process.env.PORT || 4000;
 
@@ -17,6 +18,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/stock", stockRoutes);
 
 app.listen(PORT, () => {
   console.log(`API is running on port ${PORT}`);

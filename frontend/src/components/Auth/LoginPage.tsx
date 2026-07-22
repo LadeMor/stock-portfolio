@@ -2,9 +2,10 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { login } from "../../lib/api/auth";
 import type { LoginDto } from "../../types/auth";
-import { redirect } from "@tanstack/react-router";
+import { redirect, useNavigate } from "@tanstack/react-router";
 
 function LoginPage() {
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -31,9 +32,15 @@ function LoginPage() {
         })
     }
 
+    const navToRegister = () => {
+        navigate({
+            to: "/register"
+        })
+    }
+
     return (
-        <section>
-            <form onSubmit={onSubmit}>
+        <section className="flex justify-center align-center h-full">
+            <form onSubmit={onSubmit} className="flex flex-col border-1 rounded-md p-2 [&>input]:p-1 [&>input]:border-1">
                 <h2>Login</h2>
                 <label>Email</label>
                 <input type="email"
@@ -44,6 +51,7 @@ function LoginPage() {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)} />
                 <button type="submit">Submit</button>
+                <button onClick={navToRegister} className="underline text-sky-400 cursor-pointer">Don't have an account? Sign up.</button>
             </form>
         </section>
     );

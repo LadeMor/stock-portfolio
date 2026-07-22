@@ -25,5 +25,6 @@ export type RegisterDto = {
 }
 
 export type RegisterResponse = {
+  id: string
   token: string
 }

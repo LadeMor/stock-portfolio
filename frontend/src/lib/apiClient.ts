@@ -1,5 +1,17 @@
 const API_URL = import.meta.env.VITE_API_URL
 
+export class ApiError<T = unknown> extends Error {
+  status: number
+  data: T
+
+  constructor(status: number, message: string, data: T) {
+    super(message)
+    this.name = 'ApiError'
+    this.status = status
+    this.data = data
+  }
+}
+
 export async function apiClient<T>(
   path: string,
   options?: RequestInit,
@@ -16,9 +28,16 @@ export async function apiClient<T>(
 
 
     if (!response.ok) {
-      throw new Error(`Request failed: ${response.status}`)
+      const body = await response.json().catch(() => null)
+
+      throw new ApiError(
+        response.status,
+        body?.message ?? `Request failed: ${response.status}`,
+        body,
+      )
     }
     return response.json() as Promise<T>
+
   } catch (err) {
     console.error("Error with request: " + err);
     throw err
