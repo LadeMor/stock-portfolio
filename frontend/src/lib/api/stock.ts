@@ -23,3 +23,12 @@ export function createStock(dto: CreateStockDto, token: string) {
         },
     })
 }
+
+export function deleteStock(stockId: string, token: string) {
+    return apiClient(`/stock/${stockId}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+}

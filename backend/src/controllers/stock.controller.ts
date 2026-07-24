@@ -1,7 +1,10 @@
 import { prisma } from "../prisma/client.js";
 import type { AuthenticatedRequest } from "../types/authTypes.js";
 import type { Response } from "express";
-import { createStockSchema } from "../schemas/stock-schema.js";
+import {
+    createStockSchema,
+    deleteStockSchema
+} from "../schemas/stock-schema.js";
 
 export const getMyStocks = async (req: AuthenticatedRequest, res: Response) => {
 
@@ -13,6 +16,7 @@ export const getMyStocks = async (req: AuthenticatedRequest, res: Response) => {
                 userId: req.user.id
             },
             select: {
+                id: true,
                 ticker: true,
                 quantity: true,
                 purchasePrice: true,
@@ -51,15 +55,55 @@ export const createStock = async (req: AuthenticatedRequest, res: Response) => {
                 quantity: validation.data.quantity,
                 purchasePrice: validation.data.purchasePrice
             },
-            select:{
+            select: {
                 id: true
             }
         })
 
-        return res.status(201).json({stockId: newStock.id});
+        return res.status(201).json({ stockId: newStock.id });
 
     } catch (err) {
         return res.status(500).json({ error: "Error creating stock: " + err });
     }
 
+}
+
+export const deleteStock = async (req: AuthenticatedRequest, res: Response) => {
+
+    const validation = deleteStockSchema.safeParse(req.params);
+
+    if (!validation.success) {
+        const { fieldErrors, formErrors } = validation.error.flatten();
+        return res.status(400).json({ message: "Validation failed", fieldErrors, formErrors });
+    }
+
+    if (!req.user) {
+        return res.status(401).json({
+            message: 'Unauthorized',
+        })
+    }
+
+    const userId = req.user.id;
+    const stockId = validation.data.id;
+
+    try {
+
+        const result = await prisma.stock.deleteMany({
+            where: {
+                id: stockId,
+                userId: userId,
+            },
+        })
+
+        if (result.count === 0) {
+            return res.status(404).json({
+                error: 'Stock not found',
+            })
+        }
+
+        return res.status(204).send();
+
+    } catch (err) {
+        return res.status(500).json({ error: "Error deleting stock: " + err });
+    }
 }

@@ -1,4 +1,5 @@
 export type Stock = {
+    id: string,
     ticker: string,
     quantity: number,
     purchasePrice: number,

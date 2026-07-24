@@ -18,3 +18,7 @@ export const createStockSchema = z.object({
         .positive('Purchase price must be greater than zero')
         .max(1_000_000, 'Purchase price is too large'),
 })
+
+export const deleteStockSchema = z.object({
+    id: z.uuid()
+})

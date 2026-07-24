@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { login } from "../../lib/api/auth";
 import type { LoginDto } from "../../types/auth";
-import { redirect, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -10,15 +10,13 @@ function LoginPage() {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
 
-    const mutation = useMutation({
+    const {mutate, isPending} = useMutation({
         mutationFn: (data: LoginDto) => login(data),
         onSuccess: (response) => {
             localStorage.setItem("userToken", response.token);
-            throw redirect({
-                to: '/__authenticated/dashboard',
-                search: {
-                    redirect: location.href,
-                },
+            navigate({
+                to: '/dashboard',
+                replace: true,
             })
         }
     })
@@ -26,7 +24,7 @@ function LoginPage() {
     const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
-        mutation.mutate({
+        mutate({
             email,
             password,
         })
@@ -50,7 +48,12 @@ function LoginPage() {
                 <input type="password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)} />
-                <button type="submit">Submit</button>
+                {
+                    isPending ?
+                        <button className="bg-sky-500 mt-2 rounded-md text-white p-1 hover:bg-sky-800 cursor-pointer" type="submit" disabled>Please wait</button>
+                        :
+                        <button className="bg-sky-500 mt-2 rounded-md text-white p-1 hover:bg-sky-800 cursor-pointer" type="submit">Submit</button>
+                }
                 <button onClick={navToRegister} className="underline text-sky-400 cursor-pointer">Don't have an account? Sign up.</button>
             </form>
         </section>

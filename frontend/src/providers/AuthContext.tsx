@@ -6,7 +6,7 @@ type AuthContextValue = {
     token: string | null
     isAuthenticated: boolean
     isLoading: boolean
-    // logout: () => void
+    logout: () => void
 }
 
 export const AuthContext = createContext<AuthContextValue | undefined>(undefined)

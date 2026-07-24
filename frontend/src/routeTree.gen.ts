@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as _authenticatedAddStockRouteImport } from './routes/__authenticated/add-stock'
 import { Route as _authenticatedDashboardRouteImport } from './routes/__authenticated/dashboard'
+import { Route as _authenticatedSettingsRouteImport } from './routes/__authenticated/settings'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -45,6 +46,11 @@ const _authenticatedDashboardRoute = _authenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => _authenticatedRouteRoute,
 } as any)
+const _authenticatedSettingsRoute = _authenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => _authenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/add-stock': typeof _authenticatedAddStockRoute
   '/dashboard': typeof _authenticatedDashboardRoute
+  '/settings': typeof _authenticatedSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/add-stock': typeof _authenticatedAddStockRoute
   '/dashboard': typeof _authenticatedDashboardRoute
+  '/settings': typeof _authenticatedSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -68,12 +76,14 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/__authenticated/add-stock': typeof _authenticatedAddStockRoute
   '/__authenticated/dashboard': typeof _authenticatedDashboardRoute
+  '/__authenticated/settings': typeof _authenticatedSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/register' | '/add-stock' | '/dashboard'
+  fullPaths:
+    '/' | '/login' | '/register' | '/add-stock' | '/dashboard' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/register' | '/add-stock' | '/dashboard'
+  to: '/' | '/login' | '/register' | '/add-stock' | '/dashboard' | '/settings'
   id:
     | '__root__'
     | '/'
@@ -82,6 +92,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/__authenticated/add-stock'
     | '/__authenticated/dashboard'
+    | '/__authenticated/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -135,17 +146,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof _authenticatedDashboardRouteImport
       parentRoute: typeof _authenticatedRouteRoute
     }
+    '/__authenticated/settings': {
+      id: '/__authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof _authenticatedSettingsRouteImport
+      parentRoute: typeof _authenticatedRouteRoute
+    }
   }
 }
 
 interface _authenticatedRouteRouteChildren {
   _authenticatedAddStockRoute: typeof _authenticatedAddStockRoute
   _authenticatedDashboardRoute: typeof _authenticatedDashboardRoute
+  _authenticatedSettingsRoute: typeof _authenticatedSettingsRoute
 }
 
 const _authenticatedRouteRouteChildren: _authenticatedRouteRouteChildren = {
   _authenticatedAddStockRoute: _authenticatedAddStockRoute,
   _authenticatedDashboardRoute: _authenticatedDashboardRoute,
+  _authenticatedSettingsRoute: _authenticatedSettingsRoute,
 }
 
 const _authenticatedRouteRouteWithChildren =
